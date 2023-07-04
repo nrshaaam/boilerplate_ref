@@ -1,0 +1,617 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <style type="text/css">
+        .header_gridview {
+            padding: 6px;
+            color: #fff;
+        }
+
+        .grid td, .grid th {
+            text-align: center;
+        }
+
+        .style1 {
+            width: 171px;
+        }
+
+        .style10 {
+            width: 98%;
+            height: 8px;
+        }
+
+        .style14 {
+        }
+
+        .style16 {
+            width: 150px;
+        }
+
+        .style53 {
+            width: 57px;
+        }
+
+        .style54 {
+            width: 57px;
+            background-color: #FFFFFF;
+        }
+
+        .style56 {
+            width: 108px;
+            background-color: #333333;
+        }
+
+        .style57 {
+            width: 108px;
+        }
+
+        .style61 {
+            width: 846px;
+            height: 69px;
+        }
+
+        .style62 {
+            width: 69px;
+        }
+
+        .style63 {
+            width: 81px;
+            text-align: left;
+        }
+
+        .style64 {
+            width: 224px;
+        }
+
+        .style65 {
+            width: 81px;
+            text-align: left;
+        }
+
+        .style67 {
+            width: 7px;
+        }
+
+        .style68 {
+            width: 32px;
+        }
+
+        .style69 {
+            width: 81px;
+            text-align: left;
+            height: 26px;
+        }
+
+        .style70 {
+            width: 32px;
+            height: 26px;
+        }
+
+        .style71 {
+            width: 7px;
+            height: 26px;
+        }
+
+        .style72 {
+            width: 224px;
+            height: 26px;
+        }
+
+        .style73 {
+            width: 355px;
+            height: 69px;
+        }
+
+        .style74 {
+            width: 30%;
+            background-color: #CCCCCC;
+        }
+
+        .style75 {
+            width: 41px;
+        }
+
+        .style76 {
+            width: 40px;
+        }
+
+        .style77 {
+            width: 230px;
+            height: 69px;
+        }
+
+        .style78 {
+            width: 81px;
+            text-align: left;
+            height: 2px;
+        }
+
+        .style79 {
+            width: 32px;
+            height: 2px;
+        }
+
+        .style80 {
+            width: 7px;
+            height: 2px;
+        }
+
+        .style81 {
+            width: 224px;
+            height: 2px;
+        }
+
+        .auto-style8 {
+            width: 171px;
+        }
+
+        .auto-style9 {
+            width: 546px;
+        }
+
+        .auto-style10 {
+            width: 48px;
+        }
+
+        .auto-style11 {
+            width: 667px;
+            height: 176px;
+        }
+
+        .auto-style12 {
+            width: 171px;
+            text-align: left;
+        }
+
+        .auto-style13 {
+            width: 617px;
+        }
+
+        .auto-style22 {
+            width: 98%;
+            height: 211px;
+        }
+
+        .auto-style29 {
+            width: 50%;
+            height: 8px;
+        }
+
+        .auto-style33 {
+            width: 141px;
+        }
+
+        .auto-style34 {
+            width: 152px;
+            background-color: #333333;
+            text-align: center;
+        }
+
+        .auto-style35 {
+            width: 152px;
+        }
+
+        .auto-style38 {
+            width: 118px;
+            background-color: #FFFFFF;
+            text-align: center;
+        }
+
+        .auto-style39 {
+            width: 118px;
+        }
+
+        .auto-style40 {
+            overflow-x: auto;
+            min-height: 0.01%;
+            width: 183px;
+            overflow-y: hidden;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+            border: 1px solid #dddddd;
+            margin-bottom: 15px;
+        }
+
+        .auto-style41 {
+            width: 175px;
+        }
+
+        .auto-style42 {
+            background-color: #999999;
+        }
+
+        .auto-style45 {
+            background-color: #FFFFFF;
+        }
+
+        .auto-style47 {
+            width: 245px;
+        }
+
+        .auto-style48 {
+            width: 66px;
+            background-color: #FFFFFF;
+        }
+
+        .auto-style49 {
+            width: 99%;
+            height: 8px;
+        }
+
+        .auto-style50 {
+            width: 817px;
+            height: 69px;
+        }
+
+        .auto-style51 {
+            height: 69px;
+        }
+
+        .auto-style52 {
+            width: 1784px;
+            height: 69px;
+        }
+
+        .auto-style53 {
+            width: 150px;
+            height: 30px;
+        }
+
+        .auto-style56 {
+            height: 30px;
+            width: 321px;
+        }
+    </style>
+    <script>
+        var username = document.getElementsByClassName("name")[0].getElementsByClassName("ng-binding")[0].innerHTML;
+        var now = new Date();
+
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $('#datetb').val(today);
+
+        GetDestination();
+        GetProject();
+
+        function GetDestination() {
+            $.ajax({
+                url: '../api/CSHSManifest/GetStationDropdown',
+                type: "GET",
+                data: {
+                },
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    var doc = document.getElementById("destinationddl");
+                    doc.innerHTML = "";
+
+                    for (var j = 0; j < data.length; ++j) {
+                        var option = document.createElement("option");
+                        option.value = data[j].origin_code;
+                        option.text = data[j].origin_code;
+                        //doc.style.minWidth = "100%";
+                        doc.appendChild(option);
+                    }
+                },
+                error: function (xhr) {
+                    swal("Error", xhr.status + "-" + xhr.statusCode, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+
+        function GetProject() {
+            $.ajax({
+                url: '../api/CSHSManifest/GetProjectDropdown',
+                type: "GET",
+                data: {
+                },
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    var doc = document.getElementById("projectddl");
+                    doc.innerHTML = "";
+
+                    for (var j = 0; j < data.length; ++j) {
+                        var option = document.createElement("option");
+                        option.value = data[j].id;
+                        option.text = data[j].cProjectName;
+                        //doc.style.minWidth = "100%";
+                        doc.appendChild(option);
+                    }
+                },
+                error: function (xhr) {
+                    swal("Error", xhr.status + "-" + xhr.statusCode, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+
+        function GetData() {
+
+            var datetb = document.getElementById("datetb").value;
+            var destinationddl = document.getElementById("destinationddl").value;
+            var projectddl = document.getElementById("projectddl").value;
+            var batchtb = document.getElementById("batchtb").value;
+
+            $.ajax({
+                url: '../api/CSHSManifest/GetData?mode=Manifest' +
+                    '&username=' + username +
+                    '&datetb=' + datetb +
+                    '&destinationddl=' + destinationddl +
+                    '&projectddl=' + projectddl +
+                    '&batchtb=' + batchtb,
+                type: "POST",
+                data: {
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data !== null) {
+                        var jsonData = JSON.parse(data.response);
+                        if (jsonData.cdespatchno !== "undefined")
+                            document.getElementById("currentmanifest").innerHTML = jsonData.cdespatchno;
+                        if (jsonData.statuslbl !== "undefined")
+                            document.getElementById("statuslbl").innerHTML = jsonData.statuslbl;
+                        if (jsonData.ttlpcslbl !== "undefined")
+                            document.getElementById("ttlpcslbl").innerHTML = jsonData.ttlpcslbl;
+                        if (jsonData.ttlcnlbl !== "undefined")
+                            document.getElementById("ttlcnlbl").innerHTML = jsonData.ttlcnlbl;
+                        if (jsonData.scancnlbl !== "undefined")
+                            document.getElementById("scancnlbl").innerHTML = jsonData.scancnlbl;
+                        if (jsonData.scanpcslbl !== "undefined")
+                            document.getElementById("scanpcslbl").innerHTML = jsonData.scanpcslbl;
+                        if (jsonData.scancnlbl0 !== "undefined")
+                            document.getElementById("scancnlbl0").innerHTML = jsonData.scancnlbl0;
+                        if (jsonData.scanpcslbl0 !== "undefined")
+                            document.getElementById("scanpcslbl0").innerHTML = jsonData.scanpcslbl0;
+                    }
+
+                },
+                error: function (xhr) {
+                    var errorMessage = errorDetail(xhr.status);
+                    swal("Error", errorMessage, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+
+        function resetbtn_Click() {
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+            $('#datetb').val(today);
+
+            document.getElementById("destinationddl").selectedIndex = 0;
+            document.getElementById("projectddl").selectedIndex = 0;
+            document.getElementById("batchtb").value = "";
+            document.getElementById("Normal").checked = true;
+            document.getElementById("SecurityHandling").selectedIndex = false;
+            document.getElementById("Document").checked = false;
+            document.getElementById("Parcel").selectedIndex = true;
+            document.getElementById("scanrb_0").checked = true;
+            document.getElementById("scanrb_1").selectedIndex = false;
+            document.getElementById("cnlbl").innerHTML = "";
+            document.getElementById("mpslbl").innerHTML = "";
+            document.getElementById("redoclbl").innerHTML = "";
+            document.getElementById("ErrorMessage").innerHTML = "";
+        }
+
+        function refreshbtn_Click() {
+            resetbtn_Click();
+        }
+
+        function delbtn_Click() {
+            //GetData();
+            var dellbl = document.getElementById("dellbl");
+            var delbtn = document.getElementById("delbtn");
+
+            if (delbtn.innerHTML === "Delete (-)") {
+                dellbl.style.display = "block";
+                delbtn.innerHTML = "Delete Off";
+                dellbl.innerHTML = "Delete Mode";
+            } else if (delbtn.innerHTML === "Delete Off") {
+                dellbl.style.display = "none";
+                delbtn.innerHTML = "Delete (-)";
+                dellbl.innerHTML = "";
+            }
+        }
+
+        function closeModalList() {
+            //GetData();
+            $('#ListModal').modal('hide');
+        }
+    </script>
+</head>
+<body>
+    <div style="padding-left:5%;">
+
+        <div id="Content2">
+            <h1>Customer Outbound Manifest Scan</h1>
+        </div>
+        <div class="table-responsive">
+            <table class="auto-style11">
+                <tr>
+                    <td class="auto-style12" style="padding:0 10px;"><label id="Label1">Date</label></td>
+                    <td class="text-center" style="padding:0 10px;">:</td>
+                    <td style="padding:0 10px;"><input id="datetb" style="min-width: 100%" type="date" onchange="GetData()" /></td>
+                    <td class="auto-style13" style="padding:0 10px;"><label id="Label3" style="width:143px;">Current Manifest</label></td>
+                    <td class="auto-style10" style="padding:0 10px;">:</td>
+                    <td class="auto-style9" style="padding:0 10px;"><label id="currentmanifest"></label></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="auto-style12" style="padding:0 10px;"><label id="Label2">Destination</label></td>
+                    <td class="text-center" style="padding:0 10px;">:</td>
+                    <td class="auto-style9" style="padding:0 10px;">
+                        <select id="destinationddl" style="min-width:100%;min-height:80%;" @*onchange="destinationddl_SelectedIndexChanged"*@>
+                            <option value="">-- Select One --</option>
+                        </select>
+                    </td>
+                    <td class="auto-style13" style="padding:0 10px;"><label id="Label12">Status</label></td>
+                    <td class="auto-style10" style="padding:0 10px;">:</td>
+                    <td class="auto-style9" style="padding:0 10px;"><label id="statuslbl" style="color:#FF0000;"></label></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="auto-style12" style="padding:0 10px;"><label id="Label11">Project</label></td>
+                    <td class="text-center" style="padding:0 10px;">:</td>
+                    <td class="auto-style9" style="padding:0 10px;">
+                        <select id="projectddl" style="min-width:100%;min-height:70%;" @*onchange="projectddl_SelectedIndexChanged"*@>
+                            <option value="">-- Select One --</option>
+                        </select>
+                    </td>
+                    <td colspan="3" style="padding:0 10px;">
+                        <button type="button" class="btn"
+                                onclick="printbtn_Click()" style="background-color:#99CCFF;border:black 1px solid;width:80px;" ">
+                            Print
+                        </button>
+                        <button type="button" class="btn"
+                                onclick="resetbtn_Click()" style="background-color: #99CCFF; border: black 1px solid; width: 80px;">
+                            Reset
+                        </button>
+                        <button type="button" class="btn"
+                                onclick="refreshbtn_Click()" style="background-color: #99CCFF; border: black 1px solid; width: 80px;">
+                            Refresh
+                        </button>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="auto-style12" style="padding:0 10px;"><label id="Label13" style="text-align:right;">Batch No</label></td>
+                    <td class="text-center" style="padding:0 10px;">:</td>
+                    <td class="auto-style9" style="padding:0 10px;"><input type="number" id="batchtb" name="batchtb" value="0" style="min-width: 100%;" @*onchange="batchtb_TextChanged()*@ /></td>
+                    <td class="auto-style13" style="padding:0 10px;">&nbsp;</td>
+                    <td class="auto-style10" style="padding:0 10px;">&nbsp;</td>
+                    <td class="auto-style9" style="padding:0 10px;">&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="si_left" colspan="6"></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="auto-style8">&nbsp;</td>
+                    <td class="text-center">&nbsp;</td>
+                    <td class="auto-style9">&nbsp;</td>
+                    <td class="auto-style13">&nbsp;</td>
+                    <td class="auto-style10">&nbsp;</td>
+                    <td class="auto-style9">&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+        <div class="table-responsive">
+            <div id="Panel3" style="margin-top: 0px; width: 800px; height: 360px;">
+                <table class="auto-style19">
+                    <tr>
+                        <td style="text-align:left;width:150px;">
+                            <label for="servicesrb">Services :</label>
+                        </td>
+                        <td>
+                            <div>
+                                <input type="radio" name="servicesrb" id="Normal" value="N" checked />
+                                <label for="Normal">Normal</label>
+                                <input type="radio" name="servicesrb" id="SecurityHandling" value="S" />
+                                <label for="SecurityHandling">Security Handling</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;width:150px;">
+                            <label for="typerb">Type :</label>
+                        </td>
+                        <td class="auto-style23">
+                            <div>
+                                <input type="radio" name="typerb" id="Document" value="D" />
+                                <label for="Document">Document</label>
+                                <input type="radio" name="typerb" id="Parcel" value="P" checked />
+                                <label for="Parcel">Parcel</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="style14" colspan="2">
+                            <div class="panel" style="background-color: #CCCCCC; border: 2px solid black; width: 96%; text-align: center; height: 170px;">
+                                <table class="auto-style16">
+                                    <tr>
+                                        <td style="text-align: left" class="auto-style17">
+                                            <input type="radio" id="scanrb_0" name="scanrb" value="CN" checked="checked" @*onchange="scanrb_SelectedIndexChanged();*@ />
+                                            <label for="scanrb_0">CN</label>
+                                            <input type="radio" id="scanrb_1" name="scanrb" value="MPS" @*onchange="scanrb_SelectedIndexChanged();*@ />
+                                            <label for="scanrb_1">MPS</label>
+                                            <input type="text" id="scan" name="scan" onchange="ScanData();"
+                                                   style="font-size: large; height: 28px; width: 152px;" />
+                                        </td>
+                                        <td class="auto-style41" style="text-align: right">
+                                            <div class="si_left" style="position:absolute;margin-left:-80px;">
+                                                <label id="dellbl" style="color: #FF0000; font-weight: 700; display:none;"></label>
+                                                <button type="button" id="delbtn" class="btn"
+                                                        style="margin-bottom: 0px; font-size: x-small; background-color: #99CCFF; border: 2px solid black; width: 60px; " onclick="delbtn_Click();">
+                                                    Delete (-)
+                                                </button>
+                                                &nbsp;
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="auto-style51" style="text-align: left" colspan="2">
+                                            <label id="Label19" style="padding-left:10px;">CN : </label>
+                                            <label id="cnlbl" style="height:20px;"></label>
+                                            <br />
+                                            <label id="Label20" style="padding-left:10px;">MPS : </label>
+                                            <label id="mpslbl" style="height:20px;"></label>
+                                            <br />
+                                            <label id="Label20" style="padding-left:10px;">Redoc : </label>
+                                            <label id="redoclbl" style="height:20px;"></label>
+                                            @*<label id="Error" style="font-size: x-large; color: #FF0000;  padding-left:10px; font-weight: 700;"></label>*@
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="style14" colspan="2">
+                                            <div style="margin-top:5%;text-align:left;">Summary<br></div>
+                                            <table border="1" class="auto-style29">
+                                                <tr>
+                                                    <td class="auto-style33">&nbsp;</td>
+                                                    <td class="auto-style39" style="text-align: center"><label id="Label9">Scanned</label></td>
+                                                    <td class="auto-style35" style="text-align: center"><label id="Label10">Total</label></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="auto-style33"><label id="Label7">CN:</label></td>
+                                                    <td class="auto-style38"><label id="scancnlbl"></label></td>
+                                                    <td class="auto-style34"><label id="ttlcnlbl" style="color: #FFFFFF; font-weight: 700"></label></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="auto-style33"><label id="Label8">PCs:</label></td>
+                                                    <td class="auto-style38"><label id="scanpcslbl"></label></td>
+                                                    <td class="auto-style34"><label id="ttlpcslbl" style="color: #FFFFFF; font-weight: 700"></label></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                            </div>
+                        </td>
+                        <td id="ErrorMessage" style="position:absolute;color:red;font-weight:bold;font-size:20px;">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="auto-style40">
+                <button type="button" id="btnReceivingScan" onclick="GetData()" style="background-color: #CCCCCC; width: 100%; margin-bottom: 0px;">Manifest Scan Details</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

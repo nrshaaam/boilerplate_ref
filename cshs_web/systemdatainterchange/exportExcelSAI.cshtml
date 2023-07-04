@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <style type="text/css">
+        .auto-style10 {
+            font-size: large;
+        }
+
+        .auto-style11 {
+            margin-right: 0px;
+            font-size: x-small;
+        }
+    </style>
+    <script>
+        var username = document.getElementsByClassName("name")[0].getElementsByClassName("ng-binding")[0].innerHTML;
+
+        GetPendingList();
+
+        function GetPendingList() {
+            $.ajax({
+                url: '../api/CSHSSystemDataInterchange/GetPendingDropdown',
+                type: "GET",
+                data: {
+                },
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    var doc = document.getElementById("projectddl");
+                    doc.innerHTML = "";
+
+                    for (var j = 0; j < data.length; ++j) {
+                        var option = document.createElement("option");
+                        option.value = data[j].type;
+                        option.text = data[j].type;
+                        //doc.style.minWidth = "100%";
+                        doc.appendChild(option);
+                    }
+                },
+                error: function (xhr) {
+                    swal("Error", xhr.status + "-" + xhr.statusCode, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+
+        function GetPendingSubList() {
+            var getSubType = document.getElementById("projectddl").value;
+            $.ajax({
+                url: '../api/CSHSSystemDataInterchange/GetPendingSubDropdown?SubType=' + getSubType ,
+                type: "GET",
+                data: {
+                },
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    var doc = document.getElementById("herbatype");
+                    doc.innerHTML = "";
+                    doc.style.display = "block";
+
+                    for (var j = 0; j < data.length; ++j) {
+                        var option = document.createElement("option");
+                        option.value = data[j].code;
+                        option.text = data[j].type;
+                        //doc.style.minWidth = "100%";
+                        doc.appendChild(option);
+                    }
+                },
+                error: function (xhr) {
+                    swal("Error", xhr.status + "-" + xhr.statusCode, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+
+        function GetData() {
+            var getSubType = document.getElementById("projectddl").value;
+            var getSearchString = document.getElementById("herbatype").value;
+
+            $.ajax({
+                url: '../api/CSHSSystemDataInterchange/GetData?'+
+                    'SubType=' + getSubType + '&SearchString=' + getSearchString,
+                type: "GET",
+                data: {
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    var doc = document.getElementById("ttlpending");
+                    doc.innerHTML = "";
+
+                    var pendingBtn = document.getElementById("Search");
+                    pendingBtn.style.display = "block";
+
+                    if (data !== "undefined") {
+                        doc.innerHTML = data;
+                    }
+                },
+                error: function (xhr) {
+                    swal("Error", xhr.status + "-" + xhr.statusCode, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+
+        function ResetData() {
+            var pendingBtn = document.getElementById("Search");
+            pendingBtn.style.display = "none";
+
+            var ttlpending = document.getElementById("ttlpending");
+            ttlpending.innerHTML = "";
+        }
+
+        function printbtn_Click() {
+            var getSubType = document.getElementById("projectddl").value;
+            var getSearchString = document.getElementById("herbatype").value;
+
+            $.ajax({
+                url: '../api/CSHSSystemDataInterchange/GetDataDownload?' +
+                    'SubType=' + getSubType + '&SearchString=' + getSearchString,
+                type: "GET",
+                data: {
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data.m_StringValue);
+
+                    if (data !== "undefined") {
+
+                        var fileContent = data.m_StringValue;
+                        var fileName = getSubType + getSearchString + ".csv";
+
+                        writeToTextFile(fileContent, fileName);
+                    }
+                },
+                error: function (xhr) {
+                    swal("Error", xhr.status + "-" + xhr.statusCode, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+
+        function writeToTextFile(content, filename) {
+            var blob = new Blob([content], { type: 'text/plain' });
+
+            // Check if the browser supports the 'download' attribute
+            if ('download' in document.createElement('a')) {
+                // Create a temporary link element
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+
+                // Append the link element to the document
+                document.body.appendChild(link);
+
+                // Programmatically trigger the download
+                link.click();
+
+                // Clean up the temporary link
+                document.body.removeChild(link);
+            } else {
+                // Fallback for browsers that don't support the 'download' attribute
+                var downloadWindow = window.open('data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+                downloadWindow.document.close();
+                downloadWindow.document.execCommand('SaveAs', true, filename);
+                downloadWindow.close();
+            }
+        }
+
+        function closeModalList() {
+            //GetData();
+            $('#ListModal').modal('hide');
+        }
+    </script>
+</head>
+<body>
+    <div style="padding-left:5%;">
+        <h1>Pending List</h1>
+
+        <table>
+            <tr>
+                <td>Project :&nbsp;</td>
+                <td><select id="projectddl" onchange="GetPendingSubList();ResetData()" name="project"></select></td>
+                <td><select id="herbatype" onchange="ResetData()" name="herbatype" style="display: none;"></select></td>
+                <td>
+                    <input type="image" id="ImageButton2" onclick="GetData()" src="~/App/Main/images/search_icon.png" style="text-align: right;height:19px; width:18px;" alt="Search" title="Search" />
+                </td>
+            </tr>
+        </table>
+
+
+        <br /><br />
+
+        <strong>
+            <label id="Label1" class="auto-style10">Upload Mapping : </label>
+            <label id="ttlpending" class="auto-style10">0</label>
+        </strong>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button id="Search" onclick="printbtn_Click()" class="auto-style25" style="width: 126px; background-color: #99CCFF; border-color: black; display: none;">Pending List</button>
+
+        <br /><br />
+
+        <div class="table-responsive" style="height: 350px; display: none; width: 100%;">
+            <table id="GridView11" style="width: 100%; background-color: #DEBA84; border-color: #DEBA84; border-style: none; border-width: 1px; padding: 3px; cellspacing: 2px;" class="auto-style11">
+                <thead style="background-color: #A55129; font-weight: bold; color: white;">
+                    <tr>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                @*<tbody style="background-color: #FFF7E7; color: #8C4510;">
+                    @{
+                        var rowCount = 1;
+                        var gridView11Data = new System.Data.SqlClient.SqlCommand("SELECT * FROM [GridView11]", new System.Data.SqlClient.SqlConnection(ConfigurationManager.ConnectionStrings["CSHSConnectionString"].ConnectionString));
+                        var gridView11Items = gridView11Data.ExecuteReader();
+                        while (gridView11Items.Read())
+                        {
+                            <tr>
+                                <td>@rowCount</td>
+                            </tr>
+                            rowCount++;
+                        }
+                        gridView11Items.Close();
+                    }
+                </tbody>*@
+                <tfoot style="background-color: #F7DFB5; color: #8C4510;">
+                    <tr>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

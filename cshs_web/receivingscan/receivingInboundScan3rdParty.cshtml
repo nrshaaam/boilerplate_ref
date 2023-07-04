@@ -1,0 +1,565 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <style type="text/css">
+        .style10 {
+            width: 98%;
+            height: 18px;
+        }
+
+        .style14 {
+        }
+
+        .style15 {
+            width: 101px;
+        }
+
+        .style16 {
+            width: 150px;
+        }
+
+        .auto-style40 {
+            overflow-x: auto;
+            min-height: 0.01%;
+            width: 183px;
+            overflow-y: hidden;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+            border: 1px solid #dddddd;
+            margin-bottom: 15px;
+        }
+
+        .style35 {
+            width: 411px;
+        }
+
+        .style53 {
+            width: 36px;
+        }
+
+        .style56 {
+            width: 108px;
+            background-color: #333333;
+            text-align: center;
+        }
+
+        .style57 {
+            width: 108px;
+        }
+
+        .style59 {
+            width: 455px;
+        }
+
+        .style61 {
+            width: 846px;
+        }
+
+        .style63 {
+            width: 121px;
+        }
+
+        .style65 {
+            width: 57px;
+            text-align: left;
+        }
+
+        .style66 {
+            width: 36px;
+            background-color: #FFFFFF;
+        }
+
+        .style67 {
+            width: 150px;
+            height: 26px;
+        }
+
+        .style68 {
+            height: 26px;
+        }
+
+        .style69 {
+            width: 150px;
+            height: 29px;
+        }
+
+        .style70 {
+            height: 29px;
+        }
+
+        .uppercase {
+            text-transform: uppercase;
+        }
+
+        .auto-style10 {
+            width: 117px;
+        }
+
+        .auto-style11 {
+            width: 155px;
+        }
+
+        .auto-style12 {
+            width: 29px;
+        }
+
+        .auto-style16 {
+            width: 269px;
+            height: 170px;
+        }
+
+        .auto-style17 {
+            width: 195px;
+        }
+
+        .auto-style18 {
+            width: 61%;
+            height: 18px;
+        }
+
+        .auto-style19 {
+            width: 388px;
+            height: 198px;
+        }
+
+        .auto-style20 {
+            width: 103px;
+        }
+
+        .auto-style22 {
+            width: 103px;
+            height: 2px;
+        }
+
+        .auto-style23 {
+            height: 2px;
+        }
+
+        .auto-style41 {
+            width: 175px;
+        }
+    </style>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+        });
+
+        var username = document.getElementsByClassName("name")[0].getElementsByClassName("ng-binding")[0].innerHTML;
+        var now = new Date();
+
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $('#datetb').val(today);
+
+        GetStation();
+        //GetData();
+        function GetStation() {
+            $.ajax({
+                url: '../CSHS/CSHSReceiving/GetStationDropdown',
+                type: "GET",
+                data: {
+                },
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    var doc = document.getElementById("fromstationddl");
+                    doc.innerHTML = "";
+
+                    for (var j = 0; j < data.length; ++j) {
+                        var option = document.createElement("option");
+                        option.value = data[j].origin_code;
+                        option.text = data[j].origin_code;
+                        //doc.style.minWidth = "100%";
+                        doc.appendChild(option);
+                    }
+                },
+                error: function (xhr) {
+                    var errorMessage = errorDetail(xhr.status);
+                    swal("Error", errorMessage, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+
+        function delbtn_Click() {
+            GetData();
+            var dellbl = document.getElementById("dellbl");
+            var delbtn = document.getElementById("delbtn");
+
+            if (delbtn.innerHTML === "Delete (-)") {
+                dellbl.style.display = "block";
+                delbtn.innerHTML = "Delete Off";
+                dellbl.innerHTML = "Delete Mode";
+            } else if (delbtn.innerHTML === "Delete Off") {
+                dellbl.style.display = "none";
+                delbtn.innerHTML = "Delete (-)";
+                dellbl.innerHTML = "";
+            }
+        }
+
+        function GetData() {
+            var userid = "";
+            var datetb = document.getElementById("datetb").value;
+            var fromstationddl = document.getElementById("fromstationddl").value;
+
+            $.ajax({
+                url: '../CSHS/CSHSReceiving/GetData?mode=Receiving3rdParty&datetb=' + datetb + '&fromstationddl=' + fromstationddl,
+                type: "POST",
+                data: {
+                    datetb: datetb,
+                    fromstationddl: fromstationddl
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data !== null) {
+                        document.getElementById("scancnlbl").innerHTML = data.ttlcn;
+                        document.getElementById("scanpcslbl").innerHTML = data.ttlpcs;
+                        //document.getElementById("ttlcnlbl").innerHTML = data.ttlcnlbl;
+                        //document.getElementById("ttlpcslbl").innerHTML = data.ttlpcslbl;
+                    }
+
+                },
+                error: function (xhr) {
+                    var errorMessage = errorDetail(xhr.status);
+                    swal("Error", errorMessage, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+
+        function ReceivingScan() {
+            GetData();
+            var userid = "";
+            var tableBody = "";
+            var dtTable = document.getElementById("tbodyList");
+            var datetb = document.getElementById("datetb").value;
+            var fromstationddl = document.getElementById("fromstationddl").value;
+
+            if (datetb === "" || datetb === null) {
+                swal("Warning", "Please select date", "warning", {
+                    buttons: {
+                        confirm: true
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: '../CSHS/CSHSReceiving/ReceivingScan?datetb=' + datetb + '&fromstationddl=' + fromstationddl + '&mode=Receiving3rdParty&username=' + username,
+                    type: "POST",
+                    data: {
+                        datetb: datetb,
+                        fromstationddl: fromstationddl
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        $('#ListModal').modal({ backdrop: 'static', keyboard: false, show: true });
+                        if (data !== null) {
+                            for (var i = 0; i < data.length; i++) {
+                                tableBody += "<tr>";
+                                tableBody += "<td>" + parseInt(i + 1) + "</td>";
+                                tableBody += "<td>" + data[i].cCN + "</td>";
+                                tableBody += "<td>" + data[i].cMpsNo + "</td>";
+                                tableBody += "<td>" + data[i].cdespatchno + "</td>";
+                                tableBody += "<td>" + data[i].cReDoc + "</td>";
+                                tableBody += "<td>" + data[i].cType + "</td>";
+                                tableBody += "<td>" + data[i].cServiceType + "</td>";
+                                tableBody += "<td>" + data[i].dtScan + "</td>";
+                                tableBody += "</tr>";
+                            }
+                            dtTable.innerHTML = tableBody;
+                        }
+                        else {
+                            tableBody += "<tr>";
+                            tableBody += "<td>No record(s) found.</td>";
+                            tableBody += "</tr>";
+                        }
+                    },
+                    error: function (xhr) {
+                        var errorMessage = errorDetail(xhr.status);
+                        swal("Error", errorMessage, "error", {
+                            buttons: {
+                                confirm: true
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        function closeModalList() {
+            GetData();
+            $('#ListModal').modal('hide');
+        }
+
+        function ScanData() {
+            GetData();
+            var datetb = document.getElementById("datetb").value;
+            var fromstationddl = document.getElementById("fromstationddl").value;
+            var scancn = document.getElementById("scan").value;
+            var manifestno = document.getElementById("manifesttb").value;
+            var type = document.querySelector('input[name = "typerb"]:checked').value;
+            var service = document.querySelector('input[name = "servicesrb"]:checked').value;
+            var delBtnStatus = document.getElementById("dellbl").innerHTML;
+            var scanrb = document.querySelector('input[name = "scanrb"]:checked').value;
+
+            //console.log(datetb);
+            //console.log(fromstationddl);
+            //console.log(scancn);
+            //console.log(manifestno);
+            //console.log(type);
+            //console.log(service);
+            //console.log(delBtnStatus);
+            //console.log(scanrb);
+
+            $.ajax({
+                url: '../CSHS/CSHSReceiving/ScanData?mode=Receiving3rdParty' +
+                    '&datetb=' + datetb +
+                    '&fromstationddl=' + fromstationddl +
+                    '&scancn=' + scancn +
+                    '&manifestno=' + manifestno +
+                    '&type=' + type +
+                    '&service=' + service +
+                    '&delBtnStatus=' + delBtnStatus +
+                    '&scanrb=' + scanrb +
+                    '&username=' + username,
+                type: "POST",
+                data: {
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data !== null) {
+                        document.getElementById("ErrorMessage").innerHTML = data.errorMessage;
+                        document.getElementById("cnlbl").innerHTML = data.cCN;
+                        document.getElementById("mpslbl").innerHTML = data.cMpsNo;
+                        document.getElementById("redoclbl").innerHTML = data.cReDoc;
+                    }
+                    else {
+                    }
+                },
+                error: function (xhr) {
+                    var errorMessage = errorDetail(xhr.status);
+                    swal("Error", errorMessage, "error", {
+                        buttons: {
+                            confirm: true
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div style="padding-left:5%;">
+        <h1>Customer Receiving Inbound Scan</h1>
+        <div class="table-responsive">
+            <table class="style10">
+                <tr>
+                    <td style="text-align: left" class="auto-style10">
+                        <label>Date :</label>&nbsp;
+                    </td>
+                    <td class="auto-style11" style="text-align:right;">
+                        <input type="date" style="min-width: 100%" ID="datetb" @*data-provide="datepicker"*@ onchange="GetData()" />
+                    </td>
+                    <td class="auto-style12" style="text-align: right">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left" class="auto-style10">
+                        <label>From Station :</label>&nbsp;
+                    </td>
+                    <td class="auto-style11">
+                        <select ID="fromstationddl" onchange="fromstationddl_SelectedIndexChanged">
+                        </select>
+                        <input type="image" ID="ImageButton2" runat="server"
+                               src="~/App/Main/images/search_icon.png" onclick="ImageButton2_Click"
+                               style="text-align:right;height:19px;width:18px;" alt="Search" />
+                    </td>
+                    <td class="auto-style12">
+                        &nbsp;
+                    </td>
+                    <td style="text-align: left">
+                        @*<input type="button" ID="printbtn" runat="server" Text="Print" Width="80px"
+                                    BackColor="#B9CD6B" BorderColor="Black" Visible="False"
+                                    onclick="printbtn_Click" />
+                            &nbsp;<input type="button" ID="summarybtn" runat="server" Text="Summary" Width="80px"
+                                            BackColor="#B9CD6B" BorderColor="Black" Visible="False" />*@
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr class="nav-justified" />
+        <div class="table-responsive">
+            <div id="Panel3" style="margin-top: 0px; width: 399px; height: 400px;">
+                <table class="auto-style19">
+                    <tr>
+                        <td style="text-align: left" class="auto-style20">
+                            <label for="manifesttb">Manifest No :</label>
+                        </td>
+                        <td style="text-align: left" class="style68">
+                            <input type="text" id="manifesttb" name="manifesttb" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;" class="auto-style20">
+                            <label for="servicesrb">Services :</label>
+                        </td>
+                        <td>
+                            <div @*class="form-check form-check-inline"*@>
+                                <input @*class="form-check-input"*@ type="radio" name="servicesrb" id="Normal" value="N" checked />
+                                <label @*class="form-check-label"*@ for="Normal">Normal</label>
+                                <input @*class="form-check-input"*@ type="radio" name="servicesrb" id="SecurityHandling" value="S" />
+                                <label @*class="form-check-label"*@ for="SecurityHandling">Security Handling</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;" class="auto-style22">
+                            <label for="typerb">Type :</label>
+                        </td>
+                        <td class="auto-style23">
+                            <div @*class="form-check form-check-inline"*@>
+                                <input @*class="form-check-input"*@ type="radio" name="typerb" id="Document" value="D" />
+                                <label @*class="form-check-label"*@ for="Document">Document</label>
+                                <input @*class="form-check-input"*@ type="radio" name="typerb" id="Parcel" value="P" checked />
+                                <label @*class="form-check-label"*@ for="Parcel">Parcel</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="style14" colspan="2">
+                            <div class="panel" style="background-color:#B9CD6B; border:2px solid black; width:96%; text-align:center; height:170px;">
+                                <table class="auto-style16">
+                                    <tr>
+                                        <td style="text-align: left" class="auto-style17">
+                                            <center>
+                                                <input type="radio" id="scanrb_0" name="scanrb" value="CN" checked="checked" onchange="scanrb_SelectedIndexChanged();" />
+                                                <label for="scanrb_0">CN</label>
+                                                <input type="radio" id="scanrb_1" name="scanrb" value="MPS" onchange="scanrb_SelectedIndexChanged();" />
+                                                <label for="scanrb_1">MPS</label>
+                                            </center>
+                                            <input type="text" id="scan" name="scan" onchange="ScanData();"
+                                                   style="font-size: large; height: 28px; width: 152px;" />
+                                        </td>
+                                        <td class="auto-style41" style="text-align: right">
+                                            <div class="si_left">
+                                                <label id="dellbl" style="color: #FF0000; font-weight: 700; display:none;"></label>
+                                                <button type="button" id="delbtn" class="btn btn-default" style="margin-bottom: 0px; font-size: x-small; background-color: #99CCFF; border: 2px solid black; width: 60px; " onclick="delbtn_Click();">Delete (-)</button>
+                                                &nbsp;
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="auto-style51" style="text-align: left" colspan="2">
+                                            <label id="Label19" style="padding-left:10px;">CN : </label>
+                                            <label id="cnlbl" style="height:20px;"></label>
+                                            <br />
+                                            <label id="Label20" style="padding-left:10px;">MPS : </label>
+                                            <label id="mpslbl" style="height:20px;"></label>
+                                            <br />
+                                            <label id="Error" style="font-size: x-large; color: #FF0000;  padding-left:10px; font-weight: 700;"></label>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                            </div>
+                            <table class="auto-style18">
+                                <tr>
+                                    <td class="style65">
+                                        &nbsp;
+                                    </td>
+                                    <td class="style53" style="text-align:center">
+                                        <label id="Label9">Scanned</label>
+                                    </td>
+                                    @*<td class="style57" style="text-align: center">
+                                           <label id="Label10">Total</label>
+                                        </td>*@
+                                </tr>
+                                <tr>
+                                    <td class="style65">
+                                        <label id="Label7" style="width:30px;">CN :</label>
+                                    </td>
+                                    <td class="style66">
+                                        <center>
+                                            <label id="scancnlbl" style="width:50px;">0</label>
+                                        </center>
+                                    </td>
+                                    @*<td class="style56">
+                                            <label id="ttlcnlbl" style="color:#FFFFFF;font-weight:700;width:80px;">0</label>
+                                        </td>*@
+                                </tr>
+                                <tr>
+                                    <td class="style65">
+                                        <label id="Label8">PCs :</label>
+                                    </td>
+                                    <td class="style66">
+                                        <center>
+                                            <label id="scanpcslbl">0</label>
+                                        </center>
+                                    </td>
+                                    @*<td class="style56">
+                                            <label id="ttlpcslbl" style="color:#FFFFFF;font-weight:700;">0</label>
+                                        </td>*@
+                                </tr>
+                            </table>
+                        </td>
+                        <td id="ErrorMessage" style="position:absolute;color:red;font-weight:bold;font-size:20px;">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="auto-style40">
+                <button type="button" id="btnReceivingScan" onclick="ReceivingScan()" style="background-color:#B9CD6B;width:100%;margin-bottom:0px;">Receiving Scan Details</button>
+            </div>
+        </div>
+    </div>
+    <div id="ListModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg" style="min-width:700px; margin-left:auto; margin-right:auto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close custom-close" onclick="closeModalList()" aria-label="Close" title="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="tableList" class="table table-bordered table-striped header-sub align-center valign-middle">
+                        <thead style="color: black; background-color: #B9CD6B; font-weight: bold;">
+                            <tr>
+                                <th>#</th>
+                                <th>CN</th>
+                                <th>MPS No</th>
+                                <th>Manifest No</th>
+                                <th>Redoc</th>
+                                <th>Type</th>
+                                <th>Service Type</th>
+                                <th>Date Scan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyList">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <table style="table-layout:fixed" class="table table-borderless">
+                        <tfoot>
+                            <tr>
+                                <td colspan="42" style="text-align:center !important">
+                                    <button title="Close" class="btn btn-danger" onclick="closeModalList()">
+                                        Close
+                                    </button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
