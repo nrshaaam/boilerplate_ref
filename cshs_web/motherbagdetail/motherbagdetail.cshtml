@@ -1,0 +1,251 @@
+﻿ <style>
+    h5 {
+        color: black;
+    }
+
+    input {
+        color: black;
+        width: 12em;
+    }
+
+    label {
+        color: black;
+    }
+
+    checkbox {
+        color: black;
+    }
+
+    radio {
+        color: black;
+    }
+
+    table {
+        color: black;
+    }
+
+    select {
+        color: black;
+        width: 12em;
+    }
+
+    .rightfloat {
+        float: right;
+    }
+
+    .class {
+        float: right;
+    }
+
+    .modal {
+        overflow: auto !important; 
+    }
+
+    table.table-bordered {
+        border: 1px solid black;
+        margin-top: 20px;
+    }
+
+        table.table-bordered > thead > tr > th {
+            border: 1px solid black;
+        }
+
+        table.table-bordered > tbody > tr > td {
+            border: 1px solid black;
+        }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="card main-content" style="display: inline-block;" ng-controller="motherbagdetailList as md">
+        <div class="modal-header" style="background-color: #D3D3D3;">
+            <h4 class="modal-title">Motherbag Details</h4>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Report Type</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label>:</label>
+                        <select id="slcReportType">
+                            <option value="G">Motherbag Inbound</option>
+                            <option value="J">Motherbag Outbound</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Start Date</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label>:</label>
+                        <input id="dtStartdate" type="date" ng-model="md.main.startdate" />
+                    </div>
+                    <div class="col-md-2">
+                        <label>End Date</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label>:</label>
+                        <input id="dtEnddate" type="date" ng-model="md.main.enddate" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Origin</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label>:</label>
+                        <select id="slcOrigin">
+                            <option value="HUB">HUB</option>
+                            <option value="HKI">HKI</option>
+                            <option value="HKC">HKC</option>
+                            <option ng-repeat="data in md.originList" value="{{data}}">{{data}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Destination</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label>:</label>
+                        <select id="slcDest">
+                            <option value="n0n3">All</option>
+                            <option ng-repeat="data in md.destinationList" value="{{data}}">{{data}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Batch No</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label>:</label>
+                        <input id="txtBatchno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
+                    </div>
+                    <div class="col-md-2">
+                        <label>Staff ID</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label>:</label>
+                        <input id="txtStaffid" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
+                    </div>
+                </div>
+                <div id="divMotherbaginboundfilter">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>Co-loader</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>:</label>
+                            <select id="slcColoader">
+                                <option value="n0n3">All</option>
+                                <option ng-repeat="data in md.coloaderList" value="{{data.value}}">{{data.desc}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Running No</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>:</label>
+                            <input id="txtRunningno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>Lorry Plate No</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>:</label>
+                            <input id="txtLorryplateno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
+                        </div>
+                        <div class="col-md-2">
+                            <label>Bag No</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>:</label>
+                            <input id="txtBagno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
+                        </div>
+                    </div>
+                </div>
+                <div id="divMotherbagoutboundfilter" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>Transportation Type</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>:</label>
+                            <select id="slcTranstype">
+                                <option value="n0n3">All</option>
+                                <option ng-repeat="data in md.transtypeList" value="{{data.value}}">{{data.desc}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Flight Type</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>:</label>
+                            <select id="slcFlighttype">
+                                <option value="n0n3">All</option>
+                                <option value="AK">AK</option>
+                                <option value="MH">MH</option>
+                                <option value="RAYA">RAYA</option>
+                                <option value="POSLOG">POSLOG</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>Flight No</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>:</label>
+                            <input id="txtFlightno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-10">
+                        <button type="button" class="btn" style="color: black;" ng-click="md.mainsearch()">Search</button>
+                        &nbsp;
+                        <button type="button" class="btn" style="color: black;" ng-click="md.csv()">Export to CSV</button>
+                        &nbsp;
+                        <button type="button" class="btn" style="color: black;" ng-click="md.reset()">Reset</button>
+                    </div>
+                </div>
+                <br />
+                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                    <div class="table-responsive">
+                        <table ng-table="md.tableParams" style="width: 100%;" class="table table-bordered table-condensed table-striped table-hover">
+                            <tbody>
+                                <tr ng-repeat="data in $data">
+                                    <td align="center" title="'No'" sortable="'no'">{{data.no}}</td>
+                                    <td align="center" title="'Bag No'" sortable="'manifestNo'">{{data.manifestNo}}</td>
+                                    <td align="center" title="'Bag Date'" sortable="'manifestDate'">{{data.manifestDate}}</td>
+                                    <td align="center" title="'Co-loader'" sortable="'coloader'">{{data.coloader}}</td>
+                                    <td align="center" title="'Origin'" sortable="'origin'">{{data.origin}}</td>
+                                    <td align="center" title="'Destination'" sortable="'destination'">{{data.destination}}</td>
+                                    <td align="center" title="'Bag Condition'" sortable="'bagCondition'">{{data.bagCondition}}</td>
+                                    <td align="center" title="'Weight'" sortable="'weight'">{{data.weight}}</td>
+                                    <td align="center" title="'Staff ID'" sortable="'staffId'">{{data.staffId}}</td>
+                                    <td align="center" title="'Vehicle No'" sortable="'vehicleNo'">{{data.vehicleNo}}</td>
+                                    <td align="center" title="'Running No'" sortable="'runningNo'">{{data.runningNo}}</td>
+                                    <td align="center" title="'Batch No'" sortable="'batchNo'">{{data.batchNo}}</td>
+                                    <td align="center" title="'Remarks'" sortable="'remark'">{{data.remark}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer"></div>
+    </div>
+</body>
+</html>
