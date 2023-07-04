@@ -1,0 +1,154 @@
+<style>
+    h5 {
+        color: black;
+    }
+
+    input {
+        color: black;
+        width: 12em;
+    }
+
+    label {
+        color: black;
+    }
+
+    table, th, td {
+        color: black;
+        border: 1px solid black;
+    }
+
+    select {
+        color: black;
+        width: 22em;
+    }
+
+    .rightfloat {
+        float: right;
+    }
+
+    .class {
+        float: right;
+    }
+
+    .modal {
+        overflow: auto !important;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Result table styles */
+    .result-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .result-table th,
+        .result-table td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        .result-table th {
+            background-color: #D3D3D3;
+            text-align: left;
+        }
+
+        .result-table td {
+            text-align: center;
+        }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div ng-controller="searchcn as mr">
+        <div class="card">
+            <div class="modal-header" style="background-color: #D3D3D3;">
+                <h4 class="modal-title">Search CN</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>Search CN</label>
+                        </div>
+                        <div class="col-md-8">
+                            <label>:</label>
+                            <input type="search" id="tbcn">
+                            <button type="button" class="btn" ng-click="mr.mainSearch()">Search</button>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="result-table" ng-if="mr.reportdataList.length > 0">
+                    <table>
+                            <tr>
+                                <th>BAG ID</th>
+                                <th>CN</th>
+                                <th>MPS No</th>
+                                <th>Manifest</th>
+                                <th>Batch</th>
+                                <th>Transaction</th>
+                                <th>Type</th>
+                                <th>Destination</th>
+                                <th>Branch</th>
+                                <th>DateScan</th>
+                                <th>ScanBy</th>
+                                <th>Origin</th>
+                                <th>Status</th>
+                                <th>DateUpdate</th>
+                                <th>UpdateBy</th>
+                            </tr>
+                            <tr ng-repeat="data in mr.reportdataList">
+                                <td align="center">{{data.bagid}}</td>
+                                <td align="center">{{data.cn}}</td>
+                                <td align="center">{{data.manifest}}</td>
+                                <td align="center">{{data.batch}}</td>
+                                <td align="center">{{data.transaction}}</td>
+                                <td align="center">{{data.type}}</td>
+                                <td align="center">{{data.destination}}</td>
+                                <td align="center">{{data.branch}}</td>
+                                <td align="center">{{data.dateScan}}</td>
+                                <td align="center">{{data.scanBy}}</td>
+                                <td align="center">{{data.origin}}</td>
+                                <td align="center">{{data.status}}</td>
+                                <td align="center">{{data.dateUpdate}}</td>
+                                <td align="center">{{data.updateBy}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            @*CN = 2114633179*@
+
+        </div>
+
+
+
+    </div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
