@@ -1,251 +1,114 @@
-<style>
-    h5 {
-        color: black;
-    }
-
-    input {
-        color: black;
-        width: 12em;
-    }
-
-    label {
-        color: black;
-    }
-
-    checkbox {
-        color: black;
-    }
-
-    radio {
-        color: black;
-    }
-
-    table {
-        color: black;
-    }
-
-    select {
-        color: black;
-        width: 12em;
-    }
-
-    .rightfloat {
-        float: right;
-    }
-
-    .class {
-        float: right;
-    }
-
-    .modal {
-        overflow: auto !important;
-    }
-
-    table.table-bordered {
-        border: 1px solid black;
-        margin-top: 20px;
-    }
-
-        table.table-bordered > thead > tr > th {
-            border: 1px solid black;
-        }
-
-        table.table-bordered > tbody > tr > td {
-            border: 1px solid black;
-        }
-</style>
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* CSS styles */
+        h5, label, table {
+            color: black;
+        }
+
+        input {
+            color: black;
+            width: 100%;
+            max-width: 300px; /* Set a maximum width for smaller screens */
+        }
+
+        select {
+            color: black;
+            width: 100%;
+            max-width: 300px; /* Set a maximum width for smaller screens */
+        }
+
+        .rightfloat, .class {
+            float: right;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+
+        /* Result table styles */
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+            .result-table th, .result-table td {
+                border: 1px solid black;
+                padding: 8px;
+            }
+
+            .result-table th {
+                background-color: #D3D3D3;
+                text-align: left;
+                text-align: center;
+            }
+
+            .result-table td {
+                text-align: center;
+            }
+
+        /* Column gaps */
+        .col-gap {
+            margin-right: 20px;
+        }
+
+
+    </style>
 </head>
 <body>
-    <div class="card main-content" style="display: inline-block;" ng-controller="motherbagdetailList as md">
+    <div class="card main-content" ng-controller="summaryreport as sr">
         <div class="modal-header" style="background-color: #D3D3D3;">
-            <h4 class="modal-title">Motherbag Details</h4>
+            <h4 class="modal-title">SUMMARY REPORT</h4>
         </div>
         <div class="modal-body">
-            <div class="container-fluid">
+            <div>
                 <div class="row">
-                    <div class="col-md-2">
-                        <label>Report Type</label>
-                    </div>
-                    <div class="col-md-3">
-                        <label>:</label>
+                    <div class="col-sm-2 col-gap">
+                        <label style="text-align: left">Report:</label>
                         <select id="slcReportType">
-                            <option value="G">Motherbag Inbound</option>
-                            <option value="J">Motherbag Outbound</option>
+                            <option>Please Select</option>
+                            <option value="AGSS Orders Status">AGSS Order Status</option>
+                            <option value="Atomy Orders Status">Atomy Order Status</option>
+                            <option value="Herbalife Orders Status">Herbalife Order Status</option>
+                            <option value="Shaklee Orders Status">Shaklee Order Status</option>
+                            <option value="Stolle Orders Status">Stolle Order Status</option>
                         </select>
                     </div>
                 </div>
+                &nbsp;
                 <div class="row">
-                    <div class="col-md-2">
-                        <label>Start Date</label>
+                    <div class="col-sm-2 col-gap">
+                        <label style="text-align: left">Date:</label>
+                        <input id="dtStartdate" type="date" ng-model="sr.main.startdate" />
                     </div>
-                    <div class="col-md-3">
-                        <label>:</label>
-                        <input id="dtStartdate" type="date" ng-model="md.main.startdate" />
-                    </div>
-                    <div class="col-md-2">
-                        <label>End Date</label>
-                    </div>
-                    <div class="col-md-3">
-                        <label>:</label>
-                        <input id="dtEnddate" type="date" ng-model="md.main.enddate" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label>Origin</label>
-                    </div>
-                    <div class="col-md-3">
-                        <label>:</label>
-                        <select id="slcOrigin">
-                            <option value="HUB">HUB</option>
-                            <option value="HKI">HKI</option>
-                            <option value="HKC">HKC</option>
-                            <option ng-repeat="data in md.originList" value="{{data}}">{{data}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label>Destination</label>
-                    </div>
-                    <div class="col-md-3">
-                        <label>:</label>
-                        <select id="slcDest">
-                            <option value="n0n3">All</option>
-                            <option ng-repeat="data in md.destinationList" value="{{data}}">{{data}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label>Batch No</label>
-                    </div>
-                    <div class="col-md-3">
-                        <label>:</label>
-                        <input id="txtBatchno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
-                    </div>
-                    <div class="col-md-2">
-                        <label>Staff ID</label>
-                    </div>
-                    <div class="col-md-3">
-                        <label>:</label>
-                        <input id="txtStaffid" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
-                    </div>
-                </div>
-                <div id="divMotherbaginboundfilter">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Co-loader</label>
-                        </div>
-                        <div class="col-md-3">
-                            <label>:</label>
-                            <select id="slcColoader">
-                                <option value="n0n3">All</option>
-                                <option ng-repeat="data in md.coloaderList" value="{{data.value}}">{{data.desc}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label>Running No</label>
-                        </div>
-                        <div class="col-md-3">
-                            <label>:</label>
-                            <input id="txtRunningno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Lorry Plate No</label>
-                        </div>
-                        <div class="col-md-3">
-                            <label>:</label>
-                            <input id="txtLorryplateno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
-                        </div>
-                        <div class="col-md-2">
-                            <label>Bag No</label>
-                        </div>
-                        <div class="col-md-3">
-                            <label>:</label>
-                            <input id="txtBagno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
-                        </div>
-                    </div>
-                </div>
-                <div id="divMotherbagoutboundfilter" style="display: none;">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Transportation Type</label>
-                        </div>
-                        <div class="col-md-3">
-                            <label>:</label>
-                            <select id="slcTranstype">
-                                <option value="n0n3">All</option>
-                                <option ng-repeat="data in md.transtypeList" value="{{data.value}}">{{data.desc}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label>Flight Type</label>
-                        </div>
-                        <div class="col-md-3">
-                            <label>:</label>
-                            <select id="slcFlighttype">
-                                <option value="n0n3">All</option>
-                                <option value="AK">AK</option>
-                                <option value="MH">MH</option>
-                                <option value="RAYA">RAYA</option>
-                                <option value="POSLOG">POSLOG</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Flight No</label>
-                        </div>
-                        <div class="col-md-3">
-                            <label>:</label>
-                            <input id="txtFlightno" type="text" oninput="this.value = this.value.toUpperCase()" onkeypress="return !(event.charCode == 32)" />
-                        </div>
-                    </div>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-md-10">
-                        <button type="button" class="btn" style="color: black;" ng-click="md.mainsearch()">Search</button>
-                        &nbsp;
-                        <button type="button" class="btn" style="color: black;" ng-click="md.csv()">Export to CSV</button>
-                        &nbsp;
-                        <button type="button" class="btn" style="color: black;" ng-click="md.reset()">Reset</button>
-                    </div>
-                </div>
-                <br />
-                <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                    <div class="table-responsive">
-                        <table ng-table="md.tableParams" style="width: 100%;" class="table table-bordered table-condensed table-striped table-hover">
-                            <tbody>
-                                <tr ng-repeat="data in $data">
-                                    <td align="center" title="'No'" sortable="'no'">{{data.no}}</td>
-                                    <td align="center" title="'Bag No'" sortable="'manifestNo'">{{data.manifestNo}}</td>
-                                    <td align="center" title="'Bag Date'" sortable="'manifestDate'">{{data.manifestDate}}</td>
-                                    <td align="center" title="'Co-loader'" sortable="'coloader'">{{data.coloader}}</td>
-                                    <td align="center" title="'Origin'" sortable="'origin'">{{data.origin}}</td>
-                                    <td align="center" title="'Destination'" sortable="'destination'">{{data.destination}}</td>
-                                    <td align="center" title="'Bag Condition'" sortable="'bagCondition'">{{data.bagCondition}}</td>
-                                    <td align="center" title="'Weight'" sortable="'weight'">{{data.weight}}</td>
-                                    <td align="center" title="'Staff ID'" sortable="'staffId'">{{data.staffId}}</td>
-                                    <td align="center" title="'Vehicle No'" sortable="'vehicleNo'">{{data.vehicleNo}}</td>
-                                    <td align="center" title="'Running No'" sortable="'runningNo'">{{data.runningNo}}</td>
-                                    <td align="center" title="'Batch No'" sortable="'batchNo'">{{data.batchNo}}</td>
-                                    <td align="center" title="'Remarks'" sortable="'remark'">{{data.remark}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="col-sm-2 col-gap">
+                        <label style="text-align: left">To:</label>
+                        <input id="dtEnddate" type="date" ng-model="sr.main.enddate" />
                     </div>
                 </div>
             </div>
+            &nbsp;
+            <div class="row">
+                <div class="col-sm-10">
+                    <button type="button" class="btn" ng-click="sr.mainsearch()">Report</button>
+                    <button type="button" class="btn" ng-click="sr.csv()">Export</button>
+                </div>
+            </div>
+            <div  ng-if="sr.reportResult.item.length > 0">
+                <table class="result-table">
+                    <tr>
+                        <th ng-repeat="data in sr.reportResult.header track by $index" align="center">{{data}}</th>
+                    </tr>
+                    <tr ng-repeat="dataItem in sr.reportResult.item track by $index">
+                        <td ng-repeat="data in dataItem track by $index" align="center">{{data}}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div class="modal-footer"></div>
     </div>
 </body>
 </html>
