@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* CSS styles */
+        h5, label, table {
+            color: black;
+        }
+
+        input {
+            color: black;
+            width: 100%;
+            max-width: 300px; /* Set a maximum width for smaller screens */
+        }
+
+        select {
+            color: black;
+            width: 100%;
+            max-width: 300px; /* Set a maximum width for smaller screens */
+        }
+
+        .rightfloat, .class {
+            float: right;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+
+        /* Result table styles */
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+            .result-table th, .result-table td {
+                border: 1px solid black;
+                padding: 8px;
+            }
+
+            .result-table th {
+                background-color: #D3D3D3;
+                text-align: left;
+                text-align: center;
+            }
+
+            .result-table td {
+                text-align: center;
+            }
+
+        /* Column gaps */
+        .col-gap {
+            margin-right: 20px;
+        }
+        /* Additional styles for the modal pop-up */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 1000px;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+    </style>
+</head>
+<body>
+    <div class="card main-content" ng-controller="dayendreport as der">
+        <div class="modal-header" style="background-color: #D3D3D3;">
+            <h4 class="modal-title">DAY END REPORT</h4>
+        </div>
+        <div class="modal-body">
+            <div>
+                &nbsp;
+                <div class="row">
+                    <div class="col-sm-2 col-gap">
+                        <label style="text-align: left">Date:</label>
+                        <input id="dtSearch" type="date" ng-model="der.main.startdate" ng-blur="der.mainsearch()" />
+                    </div>
+                </div>
+            </div>
+            &nbsp;
+            <div class="row">
+                <div class="col-sm-10">
+                    <button type="button" class="btn" ng-click="der.mainsearch()">Report</button>
+                </div>
+            </div>
+            &nbsp;
+            <div class="row">
+                <div class="col-sm-10">
+                    <label>Outbound Manifest Scan</label>
+                    <label id="out"></label>
+                    <div ng-if="der.reportResultOut.item.length > 0">
+                        <table class="result-table">
+                            <tr>
+                                <th ng-repeat="data in der.reportResultOut.header track by $index" align="center">{{data}}</th>
+                                <th> </th>
+                            </tr>
+                            <tr ng-repeat="dataItem in der.reportResultOut.item track by $index">
+                                <td ng-repeat="data in dataItem track by $index" align="center">{{data}}</td>
+                                <td>
+                                    <button type="button" class="btn" ng-click="der.csvOutbound()">Export</button>
+                                    <button type="button" class="btn" ng-click="der.openOutbound()">Open</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    &nbsp;
+                </div>
+                <div class="col-sm-10">
+                    <label>Inbound Receiving Scan </label>
+                    <label id="in"></label>
+                    <div ng-if="der.reportResultIn.item.length > 0">
+                        <table class="result-table">
+                            <tr>
+                                <th ng-repeat="data in der.reportResultIn.header track by $index" align="center">{{data}}</th>
+                                <th> </th>
+                            </tr>
+                            <tr ng-repeat="dataItem in der.reportResultIn.item track by $index">
+                                <td ng-repeat="data in dataItem track by $index" align="center">{{data}}</td>
+                                <td>
+                                    <button type="button" class="btn" ng-click="der.csvInbound()">Export</button>
+                                    <button type="button" class="btn" ng-click="der.openInbound()">Open</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pop-up (modal) for 'Open Outbound' -->
+        <div id="outboundModal" class="modal">
+            <div class="modal-content">
+                <span class="close" ng-click="der.closeOutboundModal()">&times;</span>
+                <h2>Summary Report of Outbound Manifest</h2>
+                <p>This is the content of the outbound modal.</p>
+                <!-- Add your specific content here for the 'Open Outbound' pop-up -->
+                <table>
+                    <tr>
+                        <th>Manifest Date</th>
+                        &nbsp;
+                        <td>05/05/2023</td>
+                    </tr>
+                    <tr>
+                        <th>Destination</th>
+                        &nbsp;
+                        <td>HUB</td>
+                    </tr>
+                    <tr>
+                        <th>Project</th>
+                        &nbsp;
+                        <td>ESSENTIAL IMAGE</td>
+                    </tr>
+                    <tr>
+                        <th>Batch</th>
+                        &nbsp;
+                        <td>1</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <th>Manifest No.</th>
+                    </tr>
+                </table>
+                <div class="result-table">
+                    <table>
+                        <tr>
+                            <th>Services Type: Normal</th>
+                            <th>Total CN: </th>
+                            <th>Total Pcs: </th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="result-table">
+                    <table>
+                        <tr>
+                            <th>No</th>
+                            <th>CN</th>
+                            <th>MPS No</th>
+                            <th>Redoc</th>
+                            <th>Type</th>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>User Id</th>
+                            <th>Date Scan</th>
+                            <th>Pcs</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="result-table">
+                    <table>
+                        <tr>
+                            <th>Services Type: Security Handling</th>
+                            <th>Total CN: </th>
+                            <th>Total Pcs: </th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            </div>
+
+        <!-- Pop-up (modal) for 'Open Inbound' -->
+        <div id="inboundModal" class="modal">
+            <div class="modal-content">
+                <span class="close" ng-click="der.closeInboundModal()">&times;</span>
+                <h2>Inbound Modal Title</h2>
+                <p>This is the content of the inbound modal.</p>
+                <!-- Add your specific content here for the 'Open Inbound' pop-up -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
